@@ -33,6 +33,9 @@ devel_isolated/
 # qcreator stuff
 CMakeLists.txt.user
 
+# CLion Stuff
+.idea/
+
 srv/_*.py
 *.pcd
 *.pyc
