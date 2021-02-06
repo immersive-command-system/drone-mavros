@@ -1,6 +1,7 @@
 devel/
 logs/
 build/
+cmake-build-debug/
 bin/
 lib/
 msg_gen/
