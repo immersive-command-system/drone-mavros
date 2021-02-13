@@ -15,6 +15,8 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
     
 2. Please install Gazebo by following [this link](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
+3. Download https://github.com/SwiftGust/ardupilot_gazebo and follow installation instructions on that README.
+
 ### Drone and Simulation Computer Instructions
 
 1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation)
@@ -33,7 +35,7 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
 These steps must be completed before running ROS if the simulator is to be used.
 1. Launch the desired firmware SITL.  
     1. For ArduPilot, change directory into `ardupilot/Tools/autotest`. 
-    To start the firmware SITL, run `sim_vehicle.py --help`. 
+    To start the firmware SITL, run `sim_vehicle.py -v ArduCopter -f hexa`. 
     This should provide information about the possible arguments when starting the SITL.
     See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
     
