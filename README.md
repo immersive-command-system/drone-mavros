@@ -45,7 +45,7 @@ These steps must be completed before running ROS if the simulator is to be used.
     
 ### Instructions for Running Drone Code
 1. After building the ROS project, `source devel/setup.bash` in the directory.
-2. Run `roslaunch drone.launch` to launch the drone.
+2. Run `roslaunch server_connector drone.launch` to launch the drone.
 
     
     
