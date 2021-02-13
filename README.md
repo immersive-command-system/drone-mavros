@@ -3,6 +3,7 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
 
 ## Setup
 ### Simulation Installation Instructions
+Any repositories downloaded can be placed independently of the rest.
 1. Install the desired firmware SITL (Software-In-The-Loop). The two available options are PX4 or ArduPilot.
     1. For ArduPilot, run the following: `git clone https://github.com/ArduPilot/ardupilot.git`
     Change directory into ardupilot via `cd ardupilot`. Run `git submodule update --init --recursive`. 
@@ -35,7 +36,7 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
 These steps must be completed before running ROS if the simulator is to be used.
 1. Launch the desired firmware SITL.  
     1. For ArduPilot, change directory into `ardupilot/Tools/autotest`. 
-    To start the firmware SITL, run `sim_vehicle.py -v ArduCopter -f hexa`. 
+    To start the firmware SITL, run `python sim_vehicle.py -v ArduCopter -f hexa`. 
     This should provide information about the possible arguments when starting the SITL.
     See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
     
