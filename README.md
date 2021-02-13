@@ -19,17 +19,31 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
 
 1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation)
 
-2. Install MAVROS and dependency by running
-    ```sudo apt-get install ros-melodic-mavros ros-melodic-mavros-extras        
-    wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
-    chmod a+x install_geographiclib_datasets.sh                
-    ./install_geographiclib_datasets.sh
-    sudo apt-get install python-catkin-tools
+2. Install geographiclib
     ```
-   More information can be found here: https://ardupilot.org/dev/docs/ros-install.html
+    sudo apt-get install geographiclib-* ros-melodic-geographic-*    
+    ```
    
 3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
 
 4. Once in the directory of the repository, run `catkin build`
 
+## Usage
+### Instructions for Running Simulation
+These steps must be completed before running ROS if the simulator is to be used.
+1. Launch the desired firmware SITL.  
+    1. For ArduPilot, change directory into `ardupilot/Tools/autotest`. 
+    To start the firmware SITL, run `sim_vehicle.py --help`. 
+    This should provide information about the possible arguments when starting the SITL.
+    See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
+    
+2. Launch Gazebo with ArduPilot Plugin.
+    1. Run gazebo and the corresponding .world file. Ex: `gazebo --verbose typhoon_ardupilot.world`.
+    The .world file is found in the worlds folder of the ardupilot_gazebo repo that was downloaded previously.
+    
+### Instructions for Running Drone Code
+1. After building the ROS project, `source devel/setup.bash` in the directory.
+2. Run `roslaunch drone.launch` to launch the drone.
 
+    
+    

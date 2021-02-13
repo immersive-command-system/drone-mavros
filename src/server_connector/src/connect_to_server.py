@@ -2,7 +2,7 @@
 import roslibpy
 import rospy
 
-rospy.init_node('server-connector')
+rospy.init_node('server_connector')
 
 
 def register_drone(client):
