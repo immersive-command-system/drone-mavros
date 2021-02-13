@@ -36,7 +36,7 @@ Any repositories downloaded can be placed independently of the rest.
 These steps must be completed before running ROS if the simulator is to be used.
 1. Launch the desired firmware SITL.  
     1. For ArduPilot, change directory into `ardupilot/Tools/autotest`. 
-    To start the firmware SITL, run `python sim_vehicle.py -v ArduCopter -f hexa`. 
+    To start the firmware SITL, run `python sim_vehicle.py -v ArduCopter -f gazebo-iris`. 
     This should provide information about the possible arguments when starting the SITL.
     See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
     
