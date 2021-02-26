@@ -43,6 +43,8 @@ These steps must be completed before running ROS if the simulator is to be used.
     To start the firmware SITL, run `python sim_vehicle.py -v ArduCopter -f gazebo-iris`. 
     This should provide information about the possible arguments when starting the SITL.
     See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
+    Keep in mind, the default parameters make the drone in a quadcopter configuration in SITL (but may be hexacopter in Gazebo).
+    In order to change the parameter to a hexacopter configuration, `param set FRAME_CLASS 2`.
     
 ### Instructions for Running Drone Code
 1. After building the ROS project, `source devel/setup.bash` in the directory.
