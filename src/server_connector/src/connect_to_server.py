@@ -31,7 +31,7 @@ def launch_mavros():
 
 rospy.loginfo('Starting!')
 
-server_ip = rospy.get_param('server_ip', '54.161.15.175')
+server_ip = rospy.get_param('server_ip', '192.168.254.37')
 server_port = 9090
 server_connection = roslibpy.Ros(host=server_ip, port=server_port)
 server_connection.run(timeout=10)
@@ -45,7 +45,5 @@ if server_connection.is_connected:
     topic_publisher = TopicPublisher(namespace, server_connection)
 
 r = rospy.Rate(10)
-rospy.loginfo(topic_publisher.get_topics(namespace))
 while not rospy.is_shutdown():
-    rospy.loginfo(server_connection.get_services())
     r.sleep()
