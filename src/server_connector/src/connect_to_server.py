@@ -3,7 +3,7 @@ import roslibpy
 import rospy
 import os
 import roslaunch
-import topic_publisher
+from topic_publisher import TopicPublisher
 
 rospy.init_node('server_connector')
 namespace = '/'
@@ -19,7 +19,8 @@ def register_drone(client, drone_name):
 
 def launch_mavros():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    new_path = os.path.join(dir_path, '../../../launch/drone.launch')
+    print(dir_path)
+    new_path = os.path.join(dir_path, '../launch/drone.launch')
     rospy.loginfo(new_path)
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
@@ -27,14 +28,6 @@ def launch_mavros():
                        ['namespace:=' + namespace])]
     parent = roslaunch.parent.ROSLaunchParent(uuid, roslaunch_file)
     parent.start()
-
-def publish_topics(server_connection, id):
-    service = roslibpy.Service(server_connection, '/isaacs_server/save_drone_topics', 'isaacs_server/type_to_topic')
-    request = roslibpy.ServiceRequest({"publishes": [{"name":namespace + "/mavros/set_mode",
-                                                      "type": "mavros_msgs/SetMode"}], "id": id})
-    result = service.call(request)
-    rospy.loginfo(result)
-    return result
 
 rospy.loginfo('Starting!')
 
@@ -45,11 +38,11 @@ server_connection.run(timeout=10)
 rospy.loginfo('Attempting to connect to: ' + server_ip)
 result = None
 if server_connection.is_connected:
-    result = register_drone(server_connection, 'hexacopter1')
-    namespace = "/drone_" + str(id)
+    result = register_drone(server_connection, 'hexacopter2')
+    namespace = "/drone_" + str(result['id'])
     rospy.loginfo('Connected! Launching MAVRos!')
     launch_mavros()
-    publish_topics(server_connection, result['id'])
+    topic_publisher = TopicPublisher(namespace, server_connection)
 
 r = rospy.Rate(10)
 rospy.loginfo(topic_publisher.get_topics(namespace))
