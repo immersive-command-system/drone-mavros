@@ -22,9 +22,10 @@ Any repositories downloaded can be placed independently of the rest.
 
 1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation)
 
-2. Install geographiclib
+2. Install geographiclib and mavlink
     ```
-    sudo apt-get install geographiclib-* ros-melodic-geographic-*    
+    sudo apt-get install geographiclib-* ros-melodic-geographic-*  
+    sudo apt-get install ros-melodic-mavlink
     ```
    
 3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
