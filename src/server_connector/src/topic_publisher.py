@@ -77,6 +77,7 @@ class TopicPublisher:
                 takeoff_waypoint.z_alt = 10
             takeoff_waypoint.is_current = True
             takeoff_waypoint.autocontinue = True
+            takeoff_waypoint.frame = 3
             waypoints.append(takeoff_waypoint)
         for waypoint in request.get('waypoints'):
             new_waypoint = Waypoint()
@@ -90,6 +91,7 @@ class TopicPublisher:
             new_waypoint.x_lat = waypoint.get('x_lat')
             new_waypoint.y_long = waypoint.get('y_long')
             new_waypoint.z_alt = waypoint.get('z_alt')
+            new_waypoint.frame = waypoint.get('frame')
             waypoints.append(new_waypoint)
         rospy.loginfo(waypoints)
         local_response = mission_push_service(request.get('start_index'), waypoints)
