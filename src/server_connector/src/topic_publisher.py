@@ -4,6 +4,8 @@ import roslibpy
 from mavros_msgs.srv import SetMode
 from mavros_msgs.srv import WaypointPush
 from mavros_msgs.msg import Waypoint
+from sensor_msgs.msg import NavSatFix
+
 
 class TopicPublisher:
 
@@ -11,9 +13,12 @@ class TopicPublisher:
         self.namespace = namespace
         self.connection = connection
         self.services = []
-        self.advertise_service('/mavros/set_mode','mavros_msgs/SetMode', self.set_mode, include_namespace=True)
-        self.advertise_service('/mavros/mission/push','mavros_msgs/WaypointPush',
+        self.topics = []
+        self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
+        self.advertise_service('/mavros/mission/push', 'mavros_msgs/WaypointPush',
                                self.mission_waypoint_push, include_namespace=True)
+        self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix
+                           , self.gps_publisher, include_namespace=True)
 
     def get_topics(self):
         return rospy.get_published_topics(self.namespace)
@@ -24,23 +29,36 @@ class TopicPublisher:
         service = roslibpy.Service(self.connection,
                                    service_name,
                                    service_type)
-        print(service.name)
         service.advertise(handler)
         self.services.append(service)
 
+    def publish_topic(self, topic_name, topic_type, topic_type_class, publish_function, include_namespace=False):
+        if include_namespace:
+            topic_name = self.namespace + topic_name
+        publisher = roslibpy.Topic(self.connection, topic_name, topic_type)
+        self.topics.append(publisher)
+
+        def publish(data):
+            publish_function(publisher, data)
+
+        rospy.Subscriber(topic_name, topic_type_class, publish)
+
+    # ALL PUBLISHERS
+    def gps_publisher(self, publisher, data):
+        publisher.publish({'latitude': data.latitude, 'longitude': data.longitude, 'altitude': data.altitude})
+
+    # ALL SERVICE CALLBACKS
     def set_mode(self, request, response):
         rospy.loginfo(request)
         set_mode_service = rospy.ServiceProxy(self.namespace + '/mavros/set_mode', SetMode)
-        set_mode_object = SetMode()
-        set_mode_object.custom_mode = request.get('custom_mode')
-        local_response = set_mode_service(set_mode_object)
-        response['mode_sent'] = local_response.mode_sent
-        return local_response.mode_sent
+        local_response = set_mode_service(request.get('basic_mode'), request.get('custom_mode'))
+        response['mode_sent'] = True
+        rospy.loginfo(local_response.mode_sent)
+        return True
 
     def mission_waypoint_push(self, request, response):
         rospy.loginfo(request)
         mission_push_service = rospy.ServiceProxy(self.namespace + '/mavros/mission/push', WaypointPush)
-        waypoint_push_object = WaypointPush()
         waypoints = []
         for waypoint in request.get('waypoints'):
             new_waypoint = Waypoint()
@@ -55,10 +73,8 @@ class TopicPublisher:
             new_waypoint.y_long = waypoint.get('y_long')
             new_waypoint.z_alt = waypoint.get('z_alt')
             waypoints.append(new_waypoint)
-        waypoint_push_object.waypoints = waypoints
-        print(waypoints)
-        waypoint_push_object.start_index = request.get('start_index')
-        local_response = mission_push_service(waypoint_push_object)
+        rospy.loginfo(waypoints)
+        local_response = mission_push_service(request.get('start_index'), waypoints)
         response['success'] = local_response.success
         response['wp_transfered'] = local_response.wp_transfered
         return local_response.success

@@ -31,7 +31,7 @@ def launch_mavros():
 
 rospy.loginfo('Starting!')
 
-server_ip = rospy.get_param('server_ip', '192.168.254.37')
+server_ip = rospy.get_param('server_ip', '54.161.15.175')
 server_port = 9090
 server_connection = roslibpy.Ros(host=server_ip, port=server_port)
 server_connection.run(timeout=10)
@@ -41,7 +41,7 @@ if server_connection.is_connected:
     result = register_drone(server_connection, 'hexacopter2')
     namespace = "/drone_" + str(result['id'])
     rospy.loginfo('Connected! Launching MAVRos!')
-    # launch_mavros()
+    launch_mavros()
     topic_publisher = topic_publisher.TopicPublisher(namespace, server_connection)
 
 r = rospy.Rate(20)
