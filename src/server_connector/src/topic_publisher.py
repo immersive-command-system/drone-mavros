@@ -14,6 +14,7 @@ class TopicPublisher:
         self.connection = connection
         self.services = []
         self.topics = []
+        self.location = 0
         self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
         self.advertise_service('/mavros/mission/push', 'mavros_msgs/WaypointPush',
                                self.mission_waypoint_push, include_namespace=True)
@@ -47,6 +48,9 @@ class TopicPublisher:
     def gps_publisher(self, publisher, data):
         publisher.publish({'latitude': data.latitude, 'longitude': data.longitude, 'altitude': data.altitude})
 
+        # DONE FOR TAKEOFF LOCATION
+        self.location = data
+
     # ALL SERVICE CALLBACKS
     def set_mode(self, request, response):
         rospy.loginfo(request)
@@ -60,6 +64,20 @@ class TopicPublisher:
         rospy.loginfo(request)
         mission_push_service = rospy.ServiceProxy(self.namespace + '/mavros/mission/push', WaypointPush)
         waypoints = []
+        for i in range(2):
+            takeoff_waypoint = Waypoint()
+            takeoff_waypoint.command = 22
+            takeoff_waypoint.param1 = 0
+            takeoff_waypoint.param2 = 0
+            takeoff_waypoint.param3 = 0
+            takeoff_waypoint.param4 = 0
+            if self.location:
+                takeoff_waypoint.x_lat = self.location.latitude
+                takeoff_waypoint.y_long = self.location.longitude
+                takeoff_waypoint.z_alt = 10
+            takeoff_waypoint.is_current = True
+            takeoff_waypoint.autocontinue = True
+            waypoints.append(takeoff_waypoint)
         for waypoint in request.get('waypoints'):
             new_waypoint = Waypoint()
             new_waypoint.command = waypoint.get('command')
