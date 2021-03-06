@@ -3,7 +3,7 @@ import roslibpy
 import rospy
 import os
 import roslaunch
-from topic_publisher import TopicPublisher
+import topic_publisher
 
 rospy.init_node('server_connector')
 namespace = '/'
@@ -41,9 +41,11 @@ if server_connection.is_connected:
     result = register_drone(server_connection, 'hexacopter2')
     namespace = "/drone_" + str(result['id'])
     rospy.loginfo('Connected! Launching MAVRos!')
-    launch_mavros()
-    topic_publisher = TopicPublisher(namespace, server_connection)
+    # launch_mavros()
+    topic_publisher = topic_publisher.TopicPublisher(namespace, server_connection)
 
-r = rospy.Rate(10)
+r = rospy.Rate(20)
 while not rospy.is_shutdown():
     r.sleep()
+
+server_connection.terminate()
