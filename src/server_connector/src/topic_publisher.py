@@ -145,3 +145,9 @@ class TopicPublisher:
         response['success'] = local_response.success
         rospy.loginfo(local_response.success)
         return True
+
+    def unpublish(self):
+        for service in self.services:
+            service.unadvertise()
+        for topic in self.topics:
+            topic.unadvertise()
