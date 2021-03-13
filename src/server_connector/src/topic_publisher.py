@@ -7,6 +7,7 @@ from mavros_msgs.msg import Waypoint
 from sensor_msgs.msg import NavSatFix
 from mavros_msgs.srv import CommandBool
 from mavros_msgs.srv import CommandTOL
+from mavros_msgs.srv import WaypointClear
 
 
 class TopicPublisher:
@@ -24,6 +25,10 @@ class TopicPublisher:
                                self.arm, include_namespace=True)
         self.advertise_service('/mavros/cmd/takeoff', 'mavros_msgs/CommandTOL',
                                self.takeoff, include_namespace=True)
+        self.advertise_service('/mavros/mission/clear', 'mavros_msgs/WaypointClear',
+                               self.waypoint_clear, include_namespace=True)
+        self.advertise_service('/mavros/cmd/land', 'mavros_msgs/CommandTOL',
+                               self.land_drone, include_namespace=True)
         self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix
                            , self.gps_publisher, include_namespace=True)
 
@@ -119,6 +124,24 @@ class TopicPublisher:
         local_response = takeoff_service(request.get('min_pitch'), request.get('yaw'),
                                          request.get('latitude'), request.get('longitude'),
                                          request.get('altitude'))
+        response['success'] = local_response.success
+        rospy.loginfo(local_response.success)
+        return True
+
+    def waypoint_clear(self, request, response):
+        rospy.loginfo(request)
+        waypoint_clear_service = rospy.ServiceProxy(self.namespace + '/mavros/mission/clear', WaypointClear)
+        local_response = waypoint_clear_service()
+        response['success'] = local_response.success
+        rospy.loginfo(local_response.success)
+        return True
+
+    def land_drone(self, request, response):
+        rospy.loginfo(request)
+        land_service = rospy.ServiceProxy(self.namespace + '/mavros/cmd/land', CommandTOL)
+        local_response = land_service(request.get('min_pitch'), request.get('yaw'),
+                                      request.get('latitude'), request.get('longitude'),
+                                      request.get('altitude'))
         response['success'] = local_response.success
         rospy.loginfo(local_response.success)
         return True
