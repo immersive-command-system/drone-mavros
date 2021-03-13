@@ -6,6 +6,7 @@ from mavros_msgs.srv import WaypointPush
 from mavros_msgs.msg import Waypoint
 from sensor_msgs.msg import NavSatFix
 from mavros_msgs.srv import CommandBool
+from mavros_msgs.srv import CommandTOL
 
 
 class TopicPublisher:
@@ -19,6 +20,10 @@ class TopicPublisher:
         self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
         self.advertise_service('/mavros/mission/push', 'mavros_msgs/WaypointPush',
                                self.mission_waypoint_push, include_namespace=True)
+        self.advertise_service('/mavros/cmd/arming', 'mavros_msgs/CommandBool',
+                               self.arm, include_namespace=True)
+        self.advertise_service('/mavros/cmd/takeoff', 'mavros_msgs/CommandTOL',
+                               self.takeoff, include_namespace=True)
         self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix
                            , self.gps_publisher, include_namespace=True)
 
@@ -104,6 +109,16 @@ class TopicPublisher:
         rospy.loginfo(request)
         arm_service = rospy.ServiceProxy(self.namespace + '/mavros/cmd/arming', CommandBool)
         local_response = arm_service(request.get('value'))
+        response['success'] = local_response.success
+        rospy.loginfo(local_response.success)
+        return True
+
+    def takeoff(self, request, response):
+        rospy.loginfo(request)
+        takeoff_service = rospy.ServiceProxy(self.namespace + '/mavros/cmd/takeoff', CommandTOL)
+        local_response = takeoff_service(request.get('min_pitch'), request.get('yaw'),
+                                         request.get('latitude'), request.get('longitude'),
+                                         request.get('altitude'))
         response['success'] = local_response.success
         rospy.loginfo(local_response.success)
         return True
