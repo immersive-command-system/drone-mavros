@@ -30,7 +30,7 @@ Any repositories downloaded can be placed independently of the rest.
    
 3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
 
-4. Once in the directory of the repository, run `catkin build`
+4. Once in the directory of the repository (drone-mavros), run `catkin build`
 
 ## Usage
 ### Instructions for Running Simulation
