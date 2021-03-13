@@ -18,6 +18,9 @@ class TopicPublisher:
         self.services = []
         self.topics = []
         self.location = 0
+        self.advertise_basic_services_topics()
+
+    def advertise_basic_services_topics(self):
         self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
         self.advertise_service('/mavros/mission/push', 'mavros_msgs/WaypointPush',
                                self.mission_waypoint_push, include_namespace=True)
