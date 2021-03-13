@@ -2,6 +2,21 @@
 File that runs onboard the drone, connects to and communicates with the ISAACS server
 
 ## Setup
+### Drone and Simulation Computer Instructions
+
+1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation). We recommend installing the option with Gazebo at this stage (desktop full).
+
+2. Install geographiclib and mavlink
+    ```
+    sudo apt-get install geographiclib-* ros-melodic-geographic-*  
+    sudo apt-get install ros-melodic-mavlink
+    sudo apt-get install libgeographic-dev ros-melodic-geographic-msgs
+    ```
+   
+3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
+
+4. Once in the directory of the repository (drone-mavros), run `catkin build`
+
 ### Simulation Installation Instructions
 Any repositories downloaded can be placed independently of the rest.
 1. Install the desired firmware SITL (Software-In-The-Loop). The two available options are PX4 or ArduPilot.
@@ -14,24 +29,9 @@ Any repositories downloaded can be placed independently of the rest.
     Change directory into PX4-Ardupilot via `cd PX4-Ardupilot`. Run `bash ./Tools/setup/ubuntu.sh`.
     For more information, visit https://docs.px4.io/master/en/dev_setup/dev_env_linux_ubuntu.html.
     
-2. Please install Gazebo by following [this link](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+2. If you have not yet installed Gazebo, please install Gazebo by following [this link](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
 3. Download https://github.com/SwiftGust/ardupilot_gazebo and follow installation instructions on that README.
-
-### Drone and Simulation Computer Instructions
-
-1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation)
-
-2. Install geographiclib and mavlink
-    ```
-    sudo apt-get install geographiclib-* ros-melodic-geographic-*  
-    sudo apt-get install ros-melodic-mavlink
-    sudo apt-get install libgeographic-dev ros-melodic-geographic-msgs
-    ```
-   
-3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
-
-4. Once in the directory of the repository (drone-mavros), run `catkin build`
 
 ## Usage
 ### Instructions for Running Simulation
@@ -49,8 +49,19 @@ These steps must be completed before running ROS if the simulator is to be used.
     In order to change the parameter to a hexacopter configuration, `param set FRAME_CLASS 2`.
     
 ### Instructions for Running Drone Code
-1. After building the ROS project, `source devel/setup.bash` in the directory.
+1. After building the ROS project, `source devel/setup.bash` in the `drone-mavros` directory.
 2. Run `roslaunch server_connector drone.launch` to launch the drone.
 
+## Common Errors
+`Resource not found: mavros` - Probably a faulty git submodule.
+1. `cd drone-mavros`
+2. `git submodule update --init --recursive`
+3. `catkin build`
+4. `source devel/setup.bash`
+
+`catkin: command not found`
+1. Try `sudo apt-get install ros-$ROS_DISTRO-catkin python-catkin-tools`
     
-    
+When `libmavconn` package, `CMake Error` finding package configuration file provided by `mavlink`.
+1. `sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras`
+
