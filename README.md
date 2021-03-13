@@ -52,7 +52,7 @@ These steps must be completed before running ROS if the simulator is to be used.
     
 ### Instructions for Running Drone Code
 1. After building the ROS project, `source devel/setup.bash` in the `drone-mavros` directory.
-2. Run `roslaunch server_connector drone.launch` to launch the drone.
+3. Run `roslaunch server_connector start_connection.launch server_ip:={ip}` to launch the drone where {ip} should be replaced by the ip of the ISAACS Server.
 
 ## Common Errors
 `Resource not found: mavros` - Probably a faulty git submodule.
