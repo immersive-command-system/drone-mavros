@@ -5,6 +5,7 @@ from mavros_msgs.srv import SetMode
 from mavros_msgs.srv import WaypointPush
 from mavros_msgs.msg import Waypoint
 from sensor_msgs.msg import NavSatFix
+from mavros_msgs.srv import CommandBool
 
 
 class TopicPublisher:
@@ -98,3 +99,11 @@ class TopicPublisher:
         response['success'] = local_response.success
         response['wp_transfered'] = local_response.wp_transfered
         return local_response.success
+
+    def arm(self, request, response):
+        rospy.loginfo(request)
+        arm_service = rospy.ServiceProxy(self.namespace + '/mavros/cmd/arming', CommandBool)
+        local_response = arm_service(request.get('value'))
+        response['success'] = local_response.success
+        rospy.loginfo(local_response.success)
+        return True
