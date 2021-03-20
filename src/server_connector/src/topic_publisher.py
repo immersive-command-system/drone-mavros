@@ -8,7 +8,7 @@ from sensor_msgs.msg import NavSatFix
 from mavros_msgs.srv import CommandBool
 from mavros_msgs.srv import CommandTOL
 from mavros_msgs.srv import WaypointClear
-
+from std_srvs.srv import Trigger
 
 class TopicPublisher:
 
@@ -32,6 +32,8 @@ class TopicPublisher:
                                self.waypoint_clear, include_namespace=True)
         self.advertise_service('/mavros/cmd/land', 'mavros_msgs/CommandTOL',
                                self.land_drone, include_namespace=True)
+        self.advertise_service('/shutdown', 'std_srvs/Trigger'
+                               , self.shutdown, include_namespace=True)
         self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix
                            , self.gps_publisher, include_namespace=True)
 
@@ -147,6 +149,14 @@ class TopicPublisher:
                                       request.get('altitude'))
         response['success'] = local_response.success
         rospy.loginfo(local_response.success)
+        return True
+
+    def shutdown(self, request, response):
+        rospy.loginfo(request)
+        shutdown_service = rospy.ServiceProxy('/shutdown', Trigger)
+        shutdown_service_response = shutdown_service()
+        response['success'] = shutdown_service_response.success
+        response['message'] = shutdown_service_response.message
         return True
 
     def unpublish(self):
