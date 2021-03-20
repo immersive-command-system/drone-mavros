@@ -10,8 +10,9 @@ server_port = 9090
 connection_manager = ConnectionManager(server_ip, server_port, 'hexacopter')
 connection_manager.attempt_connection()
 
-r = rospy.Rate(20)
+r = rospy.Rate(0.2)
 while not rospy.is_shutdown():
+    connection_manager.check_connection()
     r.sleep()
 
 connection_manager.stop_connection()

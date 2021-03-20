@@ -14,6 +14,8 @@ class ConnectionManager:
         self.namespace = '/'
         self.server_connection = None
         self.topic_publisher = None
+        self.persist_connection = True
+        self.launched_mavros = False
 
     def register_drone(self, client, drone_name):
         service = roslibpy.Service(client, '/isaacs_server/register_drone', 'isaacs_server/register_drone')
@@ -38,15 +40,25 @@ class ConnectionManager:
     def attempt_connection(self):
         self.server_connection = roslibpy.Ros(host=self.ip, port=self.port)
         rospy.loginfo('Attempting to connect to: ' + self.ip)
-        self.server_connection.run(timeout=10)
-        if self.namespace == '/':
+        try:
+            self.server_connection.run(timeout=5)
+        except Exception:
+            rospy.logerr('Unable to connect to server!')
+        if not self.launched_mavros:
             if self.server_connection.is_connected:
                 result = self.register_drone(self.server_connection, self.name)
                 self.namespace = "/drone_" + str(result['id'])
                 rospy.loginfo('Connected! Launching MAVRos!')
                 self.launch_mavros()
+                self.launched_mavros = True
                 self.topic_publisher = TopicPublisher(self.namespace, self.server_connection)
 
+    def check_connection(self):
+        if self.persist_connection:
+            if not self.server_connection.is_connected:
+                self.attempt_connection()
+
     def stop_connection(self):
+        self.persist_connection = False
         self.topic_publisher.unpublish()
         self.server_connection.terminate()
