@@ -6,11 +6,12 @@ File that runs onboard the drone, connects to and communicates with the ISAACS s
 
 1. Please install ROS by following [this link](http://wiki.ros.org/melodic/Installation). We recommend installing the option with Gazebo at this stage (desktop full).
 
-2. Install geographiclib and mavlink
+2. Install Dependencies: geographiclib, mavlink, roslibpy
     ```
     sudo apt-get install geographiclib-* ros-melodic-geographic-*  
     sudo apt-get install ros-melodic-mavlink
     sudo apt-get install libgeographic-dev ros-melodic-geographic-msgs
+    pip install roslibpy
     ```
    
 3. Clone this repository by running: `git clone https://github.com/immersive-command-system/drone-mavros.git --recursive`.
@@ -47,10 +48,11 @@ These steps must be completed before running ROS if the simulator is to be used.
     See https://ardupilot.org/dev/docs/using-sitl-for-ardupilot-testing.html for more information.
     Keep in mind, the default parameters make the drone in a quadcopter configuration in SITL (but may be hexacopter in Gazebo).
     In order to change the parameter to a hexacopter configuration, `param set FRAME_CLASS 2`.
+    To see a map of the flight area use: `python sim_vehicle.py -v ArduCopter -f gazebo-iris  -m --mav10 --map --console -I0`
     
 ### Instructions for Running Drone Code
 1. After building the ROS project, `source devel/setup.bash` in the `drone-mavros` directory.
-2. Run `roslaunch server_connector drone.launch` to launch the drone.
+3. Run `roslaunch server_connector start_connection.launch server_ip:={ip}` to launch the drone where {ip} should be replaced by the ip of the ISAACS Server.
 
 ## Common Errors
 `Resource not found: mavros` - Probably a faulty git submodule.
