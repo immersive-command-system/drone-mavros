@@ -4,6 +4,8 @@ import rospy
 import roslaunch
 import os
 from topic_publisher import TopicPublisher
+from std_srvs.srv import Trigger, TriggerResponse
+from mavros_msgs.msg import State
 
 class ConnectionManager:
 
@@ -16,6 +18,8 @@ class ConnectionManager:
         self.topic_publisher = None
         self.persist_connection = True
         self.launched_mavros = False
+        self.drone_state = None
+        rospy.Service('shutdown', Trigger, self.shutdown_service_callback)
 
     def register_drone(self, client, drone_name):
         service = roslibpy.Service(client, '/isaacs_server/register_drone', 'isaacs_server/register_drone')
@@ -53,6 +57,12 @@ class ConnectionManager:
                 self.launched_mavros = True
                 self.topic_publisher = TopicPublisher(self.namespace, self.server_connection)
 
+                # Starts Listening in For The Drone State (To Determine if Shutdowns are OK)
+                rospy.Subscriber(self.namespace + '/mavros/state', State, self.state_subscriber_callback)
+
+    def state_subscriber_callback(self, data):
+        self.drone_state = data
+
     def check_connection(self):
         if self.persist_connection:
             if not self.server_connection.is_connected:
@@ -62,3 +72,15 @@ class ConnectionManager:
         self.persist_connection = False
         self.topic_publisher.unpublish()
         self.server_connection.terminate()
+
+    def stop_connection_event(self, event):
+        self.stop_connection()
+
+    def shutdown_service_callback(self, req):
+        success = False
+        message = 'Unable to shutdown drone. May be armed.'
+        if self.drone_state and not self.drone_state.armed:
+            success = True
+            message = "Shutting down drone."
+            rospy.Timer(rospy.Duration(1.5), self.stop_connection_event, oneshot=True)
+        return TriggerResponse(success, message)
