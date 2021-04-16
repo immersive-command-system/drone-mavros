@@ -67,3 +67,6 @@ These steps must be completed before running ROS if the simulator is to be used.
 When `libmavconn` package, `CMake Error` finding package configuration file provided by `mavlink`.
 1. `sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras`
 
+`Pymavlink not found`
+1. Pymavlink may not be installed. To fix this issue, run `pip install pymavlink`
+
