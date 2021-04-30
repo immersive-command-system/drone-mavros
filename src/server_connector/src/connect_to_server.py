@@ -7,7 +7,8 @@ rospy.loginfo('Starting!')
 
 server_ip = rospy.get_param('server_ip', '54.161.15.175')
 server_port = 9090
-connection_manager = ConnectionManager(server_ip, server_port, 'hexacopter')
+name = rospy.get_param('name', 'hexacopter')
+connection_manager = ConnectionManager(server_ip, server_port, name)
 connection_manager.attempt_connection()
 
 r = rospy.Rate(0.2)

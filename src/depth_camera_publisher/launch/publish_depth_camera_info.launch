@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="depth_camera_publisher" name="sensor_registerer" type="sensor_registerer.py" output="screen"/>
+</launch>

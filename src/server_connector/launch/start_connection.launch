@@ -1,5 +1,9 @@
 <launch>
-    <arg name="server_ip" default="54.161.15.175"/>
-    <param name="server_ip" value="$(arg server_ip)"/>
-    <node pkg="server_connector" name="connect_to_server" type="connect_to_server.py" output="screen"/>
+    <group ns="drone">
+      <arg name="server_ip" default="54.161.15.175"/>
+      <param name="server_ip" value="$(arg server_ip)"/>
+      <arg name="name" default="hexacopter"/>
+      <param name="name" value="$(arg name)"/>
+      <node pkg="server_connector" name="connect_to_server" type="connect_to_server.py" output="screen"/>
+    </group>
 </launch>

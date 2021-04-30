@@ -122,9 +122,25 @@ LOITER> mode LAND
     </model>
 
     <model name="typhoon_h480">
-      <pose> 0 0 0 0 0 0 </pose>
+      <pose> 0 0 3.5 0 0 0 </pose>
       <include>
-        <uri>model://typhoon_h480_ardupilot</uri>
+        <uri>model://typhoon_h480_ardupilot_9002</uri>
+         <pose> 0 0 0 0 0 0 </pose>
+      </include>
+    </model>
+
+    <model name="typhoon_h480_2">
+      <pose> 0 -5 3.5 0 0 0 </pose>
+      <include>
+        <uri>model://typhoon_h480_ardupilot_9012</uri>
+         <pose> 0 0 0 0 0 0 </pose>
+      </include>
+    </model>
+
+    <model name="rfs_building">
+      <pose> -5 0 21 0 0 0 </pose>
+      <include>
+        <uri>model://rfs</uri>
          <pose> 0 0 0 0 0 0 </pose>
       </include>
     </model>
