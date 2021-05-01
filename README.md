@@ -34,9 +34,13 @@ Any repositories downloaded can be placed independently of the rest.
 
 3. Download https://github.com/SwiftGust/ardupilot_gazebo and follow installation instructions on that README.
 
+### Multi-Drone Simulation with Depth Camera Installation Instructions
+1. Go to drone-mavros/src/hexacopter_launch/scripts/start_ardupilot.sh and edit it so that the quotation marks after cd on line 2 has the absolute file path of the ardupilot/Tools/autotest folder that was downloaded earlier. An example of line 2 is cd '/home/Documents/ardupilot/Tools/autotest'.
+2. Repeat the above step, but for drone-mavros/src/hexacopter_launch/scripts/start_second_ardupilot.sh
+
 ## Usage
 ### Instructions for Running Simulation
-These steps must be completed before running ROS if the simulator is to be used.
+These steps must be completed before running ROS if the simulator is to be used. Use these steps for a generic world.
 1. Launch Gazebo with ArduPilot Plugin.
     1. Run gazebo and the corresponding .world file. Ex: `gazebo --verbose typhoon_ardupilot.world`.
     The .world file is found in the worlds folder of the ardupilot_gazebo repo that was downloaded previously.
@@ -52,7 +56,17 @@ These steps must be completed before running ROS if the simulator is to be used.
     
 ### Instructions for Running Drone Code
 1. After building the ROS project, `source devel/setup.bash` in the `drone-mavros` directory.
-3. Run `roslaunch server_connector start_connection.launch server_ip:={ip}` to launch the drone where {ip} should be replaced by the ip of the ISAACS Server.
+2. Run `roslaunch server_connector start_connection.launch server_ip:={ip}` to launch the drone where {ip} should be replaced by the ip of the ISAACS Server.
+
+### Running Multi-Drone Simulation with Depth Cameras
+1. After building the ROS project, `source devel/setup.bash` in the `drone-mavros` directory.
+
+2. Launch the custom created Gazebo world with ROS by running `roslaunch hexacopter_launch drone_sim.launch`. 
+   This should open up RVIZ to visualize depth camera point clouds, Gazebo with two drones in the world, and ardupilot for the first drone.
+   
+3. Launch the second drone's ardupilot by running in a separate terminal, `roslaunch hexacopter_launch drone_sim2.launch`
+
+4. 
 
 ## Common Errors
 `Resource not found: mavros` - Probably a faulty git submodule.

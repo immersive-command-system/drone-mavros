@@ -9,7 +9,7 @@ from mavros_msgs.msg import State
 
 class ConnectionManager:
 
-    def __init__(self, ip, port, name):
+    def __init__(self, ip, port, name, fcu_url):
         self.ip = ip
         self.port = port
         self.name = name
@@ -19,6 +19,7 @@ class ConnectionManager:
         self.persist_connection = True
         self.launched_mavros = False
         self.drone_state = None
+        self.fcu_url = fcu_url
         rospy.Service('shutdown', Trigger, self.shutdown_service_callback)
 
     def register_drone(self, client, drone_name):
@@ -37,7 +38,8 @@ class ConnectionManager:
         uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
         roslaunch.configure_logging(uuid)
         roslaunch_file = [(new_path,
-                           ['namespace:=' + self.namespace])]
+                           ['namespace:=' + self.namespace,
+                            'fcu_url:=' + self.fcu_url])]
         parent = roslaunch.parent.ROSLaunchParent(uuid, roslaunch_file)
         parent.start()
 
