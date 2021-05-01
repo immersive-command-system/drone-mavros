@@ -66,7 +66,14 @@ These steps must be completed before running ROS if the simulator is to be used.
    
 3. Launch the second drone's ardupilot by running in a separate terminal, `roslaunch hexacopter_launch drone_sim2.launch`
 
-4. 
+4. For the first drone, register it with the server by launching `roslaunch server_connector start_connection.launch server_ip:={ip} name:={name}`
+   {ip} should be replaced by the ip of the ISAACS server and {name} should be replaced by the name of the drone. 
+   
+5. For the second drone, register it with the server by launching `roslaunch server_connector start_connection.launch server_ip:={ip} name:={name} fcu_url:={fcu_url}`
+   {ip} should be replaced by the ip of the ISAACS server and {name} should be replaced by the name of the drone. The name must be different from the name given to the first drone,
+   or the code will not work. The fcu_url must also be different than the one specified to the first drone. By default, this fcu_url is `udp://127.0.0.1:14551@14555`.
+   For the first drone, leaving this blank is sufficient, but you must add `fcu_url:=udp://127.0.0.1:14561@14565` for the second drone in order for it to properly connect.
+   In a production scenario, this would be set the serial port that goes to the flight controller.
 
 ## Common Errors
 `Resource not found: mavros` - Probably a faulty git submodule.
