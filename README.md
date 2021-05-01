@@ -64,7 +64,7 @@ These steps must be completed before running ROS if the simulator is to be used.
 2. Launch the custom created Gazebo world with ROS by running `roslaunch hexacopter_launch drone_sim.launch`. 
    This should open up RVIZ to visualize depth camera point clouds, Gazebo with two drones in the world, and ardupilot for the first drone.
    
-3. Launch the second drone's ardupilot by running in a separate terminal, `roslaunch hexacopter_launch drone_sim2.launch`
+3. Launch the second drone's ardupilot by running in a separate terminal, `roslaunch hexacopter_launch drone2_sim.launch`
 
 4. For the first drone, register it with the server by launching `roslaunch server_connector start_connection.launch server_ip:={ip} name:={name}`
    {ip} should be replaced by the ip of the ISAACS server and {name} should be replaced by the name of the drone. 
