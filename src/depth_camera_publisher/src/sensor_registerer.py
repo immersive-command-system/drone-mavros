@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
-from server_connector.connection_manager import ConnectionManager
+import rospy
+from server_connector import connect_to_server
 from sensor_msgs.msg import PointCloud2
 import roslibpy
 
@@ -19,7 +19,7 @@ def register_camera(server_connection):
     service = roslibpy.Service(server_connection, '/isaacs_server/register_sensor', 'isaacs_server/register_sensor')
     request = roslibpy.ServiceRequest({'sensor_name': 'kinect',
                                        'sensor_type': 'depth_camera',
-                                       'parent_drone_name': 'Hexacopter'})
+                                       'parent_drone_name': rospy.get_param('name', 'hexacopter')})
 
 connection_manager.topic_publisher.publish_topic('/camera/depth/points',
                                                  'sensor_msgs/PointCloud2', PointCloud2,

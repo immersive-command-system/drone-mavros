@@ -53,6 +53,7 @@
   <build_depend>server_connector</build_depend>
   <build_depend>python-roslibpy</build_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>module</exec_depend>
   <exec_depend>server_connector</exec_depend>
   <exec_depend>python-roslibpy</exec_depend>
 </package>

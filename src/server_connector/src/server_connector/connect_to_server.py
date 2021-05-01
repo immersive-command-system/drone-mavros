@@ -13,7 +13,7 @@ connection_manager.attempt_connection()
 
 r = rospy.Rate(0.2)
 while not rospy.is_shutdown():
-    connection_manager.check_connection()
-    r.sleep()
+	connection_manager.check_connection()
+	r.sleep()
 
 connection_manager.stop_connection()
