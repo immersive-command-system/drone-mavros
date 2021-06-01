@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
-from server_connector import connect_to_server
+from server_connector.connection_manager import ConnectionManager
+from server_connector.connect_to_server import get_connection_manager
 from sensor_msgs.msg import PointCloud2
 import roslibpy
 
@@ -21,8 +22,13 @@ def register_camera(server_connection):
                                        'sensor_type': 'depth_camera',
                                        'parent_drone_name': rospy.get_param('name', 'hexacopter')})
 
-connection_manager.topic_publisher.publish_topic('/camera/depth/points',
-                                                 'sensor_msgs/PointCloud2', PointCloud2,
-                                                 point_cloud_publisher, include_namespace=True)
-server_connection = connection_manager.server_connection
-register_camera(server_connection)
+connection_manager = ConnectionManager.instance
+print('Getting connection manager instance')
+print(connection_manager)
+print(get_connection_manager())
+if connection_manager != None:
+    connection_manager.topic_publisher.publish_topic('/camera/depth/points',
+                                                     'sensor_msgs/PointCloud2', PointCloud2,
+                                                     point_cloud_publisher, include_namespace=True)
+    server_connection = connection_manager.server_connection
+    register_camera(server_connection)

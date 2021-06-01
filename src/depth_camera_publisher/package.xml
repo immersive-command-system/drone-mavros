@@ -49,11 +49,10 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rospy</build_depend>
   <build_depend>server_connector</build_depend>
+  <build_depend>rospy</build_depend>
   <build_depend>python-roslibpy</build_depend>
-  <exec_depend>rospy</exec_depend>
   <exec_depend>module</exec_depend>
+  <exec_depend>rospy</exec_depend>
   <exec_depend>server_connector</exec_depend>
-  <exec_depend>python-roslibpy</exec_depend>
 </package>

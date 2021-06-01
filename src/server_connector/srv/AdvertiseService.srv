@@ -1,0 +1,6 @@
+string service_name
+string service_type
+string handler_import
+bool include_namespace
+---
+bool success

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 import roslibpy
+import importlib
 from mavros_msgs.srv import SetMode
 from mavros_msgs.srv import WaypointPush
 from mavros_msgs.msg import Waypoint
@@ -8,6 +9,7 @@ from sensor_msgs.msg import NavSatFix
 from mavros_msgs.srv import CommandBool
 from mavros_msgs.srv import CommandTOL
 from mavros_msgs.srv import WaypointClear
+from server_connector.srv import AdvertiseService,AdvertiseServiceResponse
 from std_srvs.srv import Trigger
 
 class TopicPublisher:
@@ -19,6 +21,7 @@ class TopicPublisher:
         self.topics = []
         self.location = 0
         self.advertise_basic_services_topics()
+        self.create_advertiser_service()
 
     def advertise_basic_services_topics(self):
         self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
@@ -32,10 +35,19 @@ class TopicPublisher:
                                self.waypoint_clear, include_namespace=True)
         self.advertise_service('/mavros/cmd/land', 'mavros_msgs/CommandTOL',
                                self.land_drone, include_namespace=True)
-        self.advertise_service('/shutdown', 'std_srvs/Trigger'
-                               , self.shutdown, include_namespace=True)
-        self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix
-                           , self.gps_publisher, include_namespace=True)
+        self.advertise_service('/shutdown', 'std_srvs/Trigger',
+                               self.shutdown, include_namespace=True)
+        self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix,
+                           self.gps_publisher, include_namespace=True)
+
+    def create_advertiser_service(self):
+        def create_advertiser_service_handler(request):
+            function = importlib.import_module(request.handler_import)
+            self.advertise_service(request.service_name, request.service_type, function,
+                                   request.include_namespace)
+            return AdvertiseServiceResponse(True)
+        print('starting!')
+        rospy.Service('advertise_service', AdvertiseService, create_advertiser_service_handler)
 
     def get_topics(self):
         return rospy.get_published_topics(self.namespace)
