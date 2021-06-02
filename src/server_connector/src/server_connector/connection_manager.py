@@ -9,8 +9,6 @@ from mavros_msgs.msg import State
 
 class ConnectionManager:
 
-    instance = None
-
     def __init__(self, ip, port, name, fcu_url):
         self.ip = ip
         self.port = port
@@ -22,7 +20,6 @@ class ConnectionManager:
         self.launched_mavros = False
         self.drone_state = None
         self.fcu_url = fcu_url
-        ConnectionManager.instance = self
         rospy.Service('shutdown', Trigger, self.shutdown_service_callback)
 
     def register_drone(self, client, drone_name):

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import importlib
 from connection_manager import ConnectionManager
 
 if __name__ == '__main__':
@@ -13,6 +14,11 @@ if __name__ == '__main__':
 	rospy.loginfo('Starting with name ' + name + ' to ip ' + server_ip + ' with fcu_url ' + fcu_url)
 	connection_manager = ConnectionManager(server_ip, server_port, name, fcu_url)
 	connection_manager.attempt_connection()
+
+	setup_modules = rospy.get_param('setup_modules')
+	for module in setup_modules:
+		imported = importlib.import_module(module)
+		imported.setup(connection_manager)
 
 	r = rospy.Rate(0.2)
 	while not rospy.is_shutdown():
