@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import rospy
 import roslibpy
-import importlib
 from mavros_msgs.srv import SetMode
 from mavros_msgs.srv import WaypointPush
 from mavros_msgs.msg import Waypoint
@@ -9,8 +8,6 @@ from sensor_msgs.msg import NavSatFix
 from mavros_msgs.srv import CommandBool
 from mavros_msgs.srv import CommandTOL
 from mavros_msgs.srv import WaypointClear
-from server_connector.srv import AdvertiseService, AdvertiseServiceResponse
-from server_connector.srv import PublishTopic, PublishTopicResponse
 from std_srvs.srv import Trigger
 
 
@@ -23,8 +20,6 @@ class TopicPublisher:
         self.topics = []
         self.location = 0
         self.advertise_basic_services_topics()
-        self.create_advertiser_service()
-        self.create_publisher_service()
 
     def advertise_basic_services_topics(self):
         self.advertise_service('/mavros/set_mode', 'mavros_msgs/SetMode', self.set_mode, include_namespace=True)
@@ -42,28 +37,6 @@ class TopicPublisher:
                                self.shutdown, include_namespace=True)
         self.publish_topic('/mavros/global_position/global', 'sensor_msgs/NavSatFix', NavSatFix,
                            self.gps_publisher, include_namespace=True)
-
-    def create_advertiser_service(self):
-        def create_advertiser_service_handler(request):
-            function_module = importlib.import_module(request.publish_function_import_module)
-            function = getattr(function_module, request.publish_function_name)
-            self.publish_topic(request.topic_name, request.topic_type, function,
-                               request.include_namespace)
-            return AdvertiseServiceResponse(True)
-
-        rospy.Service('advertise_service', AdvertiseService, create_advertiser_service_handler)
-
-    def create_publisher_service(self):
-        def create_publisher_service_handler(request):
-            function_module = importlib.import_module(request.publish_function_import_module)
-            function = getattr(function_module, request.publish_function_name)
-            message_type_module = importlib.import_module(request.topic_type_class_import_module)
-            message_type = getattr(message_type_module, request.topic_type_class_name)
-            self.publish_topic(request.topic_name, request.topic_type, message_type,
-                               function, request.include_namespace)
-            return PublishTopicResponse(True)
-
-        rospy.Service('publish_topic', PublishTopic, create_publisher_service_handler)
 
     def get_topics(self):
         return rospy.get_published_topics(self.namespace)

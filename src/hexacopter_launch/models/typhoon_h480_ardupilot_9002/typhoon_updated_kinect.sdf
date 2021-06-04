@@ -860,7 +860,7 @@
           </geometry>
         </visual>
         <sensor name='camera' type='depth'>
-          <update_rate>20</update_rate>
+          <update_rate>10</update_rate>
           <camera name='__default__'>
             <horizontal_fov>1.0472</horizontal_fov>
             <image>

@@ -1,9 +1,0 @@
-string topic_name
-string topic_type
-string topic_type_class_import_module
-string topic_type_class_name
-string publish_function_import_module
-string publish_function_name
-bool include_namespace
----
-bool success

@@ -1,7 +1,0 @@
-string service_name
-string service_type
-string handler_import_module
-string handler_name
-bool include_namespace
----
-bool success
