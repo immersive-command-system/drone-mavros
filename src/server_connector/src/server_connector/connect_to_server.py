@@ -20,7 +20,7 @@ if __name__ == '__main__':
 		imported = importlib.import_module(module)
 		imported.setup(connection_manager)
 
-	r = rospy.Rate(0.2)
+	r = rospy.Rate(0.1)
 	while not rospy.is_shutdown():
 		connection_manager.check_connection()
 		r.sleep()
